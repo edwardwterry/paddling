@@ -1,5 +1,4 @@
-unsigned long currMillis = 0;
-unsigned long prevMillis = 0;
+unsigned long time = 0;
 
 const char echoLeft = 9;
 const char trigLeft = 10;
@@ -7,7 +6,7 @@ const char echoRight = 11;
 const char trigRight = 12;
 
 const char leftIndex = 0;
-const char rightIndex = 0;
+const char rightIndex = 1;
 
 long readUltrasonic(const char side) {
   char echo;
@@ -38,17 +37,15 @@ void setup() {
   pinMode(echoLeft, INPUT);
   pinMode(echoRight, INPUT);
 
-  Serial.begin(115200);
+  Serial.begin(9600);
 }
 
 void loop() {
-  prevMillis = currMillis;
-  currMillis = millis();
-  unsigned long delta = currMillis - prevMillis;
+  time = millis();
   long distanceLeft = readUltrasonic(leftIndex);
   long distanceRight = readUltrasonic(rightIndex);
-  // publish
-  Serial.print(delta);
+
+  Serial.print(time);
   Serial.print(",");
   Serial.print(distanceLeft);
   Serial.print(",");

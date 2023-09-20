@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+    <script>
+      window.addEventListener("DOMContentLoaded", (event) => {
+        const ws = new WebSocket("ws://localhost:8080");
+        ws.onmessage = function (event) {
+          // console.log(event.data);
+          var parsed = parseIncomingData(event.data);
+          // console.log(pos);
+          var canoe = document.querySelector("#canoe");
+          console.log(canoe.getAttribute("position"));
+          if (canoe) {
+            canoe.setAttribute("position", { x: parsed[0].x, y: parsed[0].y, z: parsed[0].z });
+            canoe.setAttribute("rotation", { x: parsed[1].x, y: parsed[1].y, z: parsed[1].z });
+          }
+        };
+      });
+
+      function parseIncomingData(data) {
+        // console.log(data);
+        let components = data.split(",");
+        return [
+          { x: components[0], y: components[1], z: 0 },
+          { x: 0, y: 0, z: components[2] },
+        ];
+      }
+    </script>
+  </head>
+  <body>
+    <a-scene>
+      <a-box
+        id="canoe"
+        position="0 0 0"
+        rotation="0 0 0"
+        color="#4CC3D9"
+      ></a-box>
+      <a-sky color="#ECECEC"></a-sky>
+    </a-scene>
+  </body>
+</html>

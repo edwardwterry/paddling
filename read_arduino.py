@@ -3,18 +3,23 @@ import threading
 import serial
 
 class SensorReader:
-    def __init__(self):
+    def __init__(self, port, baud):
 
         self.queue = SimpleQueue()
 
-        ser = serial.Serial('/dev/ttyACM0', 115200)
+        ser = serial.Serial(port, baud)
+
+        print(f'Connected to Arduino on {port} at {baud} baud')
 
         producer_thread = threading.Thread(target=self.read_arduino_data, args=(ser, ))
         producer_thread.start()
 
     def read_arduino_data(self, ser):
         while True:
-            data = ser.readline().decode().strip()
+            try:
+                data = ser.readline().decode().strip()
+            except:
+                continue
             self.queue.put(data)
 
     def get_oldest_data(self):
